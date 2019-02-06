@@ -10,7 +10,7 @@ echo  "Job started at " `date`
 CMSSW_DIR=$4
 LXBATCH_DIR=$PWD
 
-cd ${CMSSW_BASE}/src
+cd ${CMSSW_DIR}
 eval `scramv1 runtime -sh`
 cd $LXBATCH_DIR
 
