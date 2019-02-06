@@ -1,4 +1,4 @@
-# PrivateMCProductions: TkAlZMuMu
+# PrivateMCProductions: TkAlMinBias
 
 ```
 cmsrel CMSSW_10_2_0
@@ -9,4 +9,4 @@ mkdir outfiles
 ./submitAllSeeds.sh
 ```
 
-this will create 2.5M events (250 jobs for 10k Z->mu,mu events each). N.B. efficiency is not 100%, so you'll see many less reconstruction-level events.
+this will create 2.5M events (250 jobs for 1k MinBias events events each). N.B. efficiency is not 100%, so you'll see many less reconstruction-level events.
