@@ -1,0 +1,9 @@
+universe              = vanilla
+arguments             = $(ProcId) $(par1) $(par2) $(par3)
+executable            = SingleNuE10_cfi_py_GEN_SIM_DIGI_L1_DIGI2RAW_RAW2DIGI_RECO_ALCA_PU_Templ.sh
+output                = $(par3)/outfiles/step1_SingleNuE10_PU_$(par1)_evts_seed_$(ProcId).out
+error                 = $(par3)/outfiles/step1_SingleNuE10_PU_$(par1)_evts_seed_$(ProcId).err
+log                   = $(par3)/outfiles/step1_SingleNuE10_PU_$(par1)_evts_seed_$(ProcId).log
+transfer_output_files = ""
++JobFlavour = "workday" 
+queue 100
