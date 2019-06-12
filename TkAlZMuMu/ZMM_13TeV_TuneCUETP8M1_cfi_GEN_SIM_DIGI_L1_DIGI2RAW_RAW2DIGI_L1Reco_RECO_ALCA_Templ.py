@@ -33,7 +33,7 @@ options.register('myseed',
                  "my seed for the job (1 is default)")
 
 options.register('maxEvents',
-		 -1,
+		 5,
 		 VarParsing.VarParsing.multiplicity.singleton,
 		 VarParsing.VarParsing.varType.int,
 		 "Number of events to process (-1 for all)")
@@ -56,7 +56,7 @@ process.MessageLogger.destinations = ['cout', 'cerr']
 process.MessageLogger.cerr.FwkReport.reportEvery = 10000
 
 process.load('Configuration.EventContent.EventContent_cff')
-process.load('SimGeneral.MixingModule.mix_POISSON_average_cfi')
+process.load('SimGeneral.MixingModule.mixNoPU_cfi')
 process.load('Configuration.StandardSequences.GeometryRecoDB_cff')
 process.load('Configuration.StandardSequences.GeometrySimDB_cff')
 process.load('Configuration.StandardSequences.MagneticField_cff')
@@ -154,12 +154,6 @@ process.ALCARECOStreamTkAlZMuMu = cms.OutputModule("PoolOutputModule",
 )
 
 # Other statements
-process.mix.input.nbPileupEvents.averageNumber = cms.double(50.000000)
-process.mix.bunchspace = cms.int32(25)
-process.mix.minBunch = cms.int32(-12)
-process.mix.maxBunch = cms.int32(3)
-process.mix.input.fileNames = cms.untracked.vstring(['/store/relval/CMSSW_10_6_0/RelValMinBias_13/GEN-SIM/106X_upgrade2021_realistic_v4_rsb-v1/10000/951D01A7-EA63-5140-924F-39CDAC485C80.root', '/store/relval/CMSSW_10_6_0/RelValMinBias_13/GEN-SIM/106X_upgrade2021_realistic_v4_rsb-v1/10000/C62AF47C-4632-1C48-9DCF-D21A342757AB.root', '/store/relval/CMSSW_10_6_0/RelValMinBias_13/GEN-SIM/106X_upgrade2021_realistic_v4_rsb-v1/10000/86682229-A45E-BF45-9CF7-42E90E8D80A3.root', '/store/relval/CMSSW_10_6_0/RelValMinBias_13/GEN-SIM/106X_upgrade2021_realistic_v4_rsb-v1/10000/050252BF-B45B-6749-BB24-67251BE4F0FF.root', '/store/relval/CMSSW_10_6_0/RelValMinBias_13/GEN-SIM/106X_upgrade2021_realistic_v4_rsb-v1/10000/FC4B4722-0BB2-6141-9D8C-F14B0BD6928B.root', '/store/relval/CMSSW_10_6_0/RelValMinBias_13/GEN-SIM/106X_upgrade2021_realistic_v4_rsb-v1/10000/D3BF18BE-4C61-C44C-9DA8-72ACB515D2D2.root'])
-
 process.XMLFromDBSource.label = cms.string("Extended")
 process.genstepfilter.triggerConditions=cms.vstring("generation_step")
 process.mix.digitizers = cms.PSet(process.theDigitizersValid)
