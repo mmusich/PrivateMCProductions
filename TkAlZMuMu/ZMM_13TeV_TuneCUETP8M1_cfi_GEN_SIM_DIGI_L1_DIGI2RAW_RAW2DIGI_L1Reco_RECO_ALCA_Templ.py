@@ -18,8 +18,8 @@ def customise_alcareco(process):
 	process.pathALCARECOTkAlZMuMu.remove(process.ALCARECOTkAlZMuMuHLT)
 	return process
 
-from Configuration.StandardSequences.Eras import eras
-process = cms.Process('RECO',eras.Run2_2018)
+from Configuration.Eras.Era_Run3_cff import Run3
+process = cms.Process('RECO',Run3)
 
 ###################################################################
 # Setup 'standard' options
@@ -39,7 +39,7 @@ options.register('maxEvents',
 		 "Number of events to process (-1 for all)")
 
 options.register ('GlobalTag',
-                  'auto:phase1_2018_realistic',
+                  '106X_mcRun3_2023_realistic_Candidate_2019_06_07_21_52_54',
                   VarParsing.VarParsing.multiplicity.singleton, # singleton or list
                   VarParsing.VarParsing.varType.string,          # string, int, or float
 		  "Global Tag to select")
@@ -56,12 +56,12 @@ process.MessageLogger.destinations = ['cout', 'cerr']
 process.MessageLogger.cerr.FwkReport.reportEvery = 10000
 
 process.load('Configuration.EventContent.EventContent_cff')
-process.load('SimGeneral.MixingModule.mixNoPU_cfi')
+process.load('SimGeneral.MixingModule.mix_POISSON_average_cfi')
 process.load('Configuration.StandardSequences.GeometryRecoDB_cff')
 process.load('Configuration.StandardSequences.GeometrySimDB_cff')
 process.load('Configuration.StandardSequences.MagneticField_cff')
 process.load('Configuration.StandardSequences.Generator_cff')
-process.load('IOMC.EventVertexGenerators.VtxSmearedRealistic25ns13TeVEarly2018Collision_cfi')
+process.load('IOMC.EventVertexGenerators.VtxSmearedRun3RoundOptics25ns13TeVHighSigmaZ_cfi')
 process.load('GeneratorInterface.Core.genFilterSummary_cff')
 process.load('Configuration.StandardSequences.SimIdeal_cff')
 process.load('Configuration.StandardSequences.Digi_cff')
@@ -111,6 +111,22 @@ process.configurationMetadata = cms.untracked.PSet(
 from Configuration.AlCa.GlobalTag import GlobalTag
 process.GlobalTag = GlobalTag(process.GlobalTag,options.GlobalTag, '')
 
+process.GlobalTag.toGet = cms.VPSet(
+     cms.PSet(record = cms.string('BeamSpotObjectsRcd'),
+          tag = cms.string('BeamSpotObjects_Realistic25ns_13TeVCollisions_RoundOpticsHighSigmaZ_RunBased_v2_mc'),
+          connect = cms.string("frontier://FrontierProd/CMS_CONDITIONS"),
+          ),    
+           cms.PSet(record = cms.string('SiPixelDynamicInefficiencyRcd'),
+          tag = cms.string('SiPixelDynamicInefficiency_PhaseI_Run3Studies_v2'),
+         connect = cms.string("frontier://FrontierProd/CMS_CONDITIONS"),
+          ),    
+    cms.PSet(record = cms.string('SiPixelQualityFromDbRcd'),
+         label = cms.untracked.string('forDigitizer'),
+          tag = cms.string('SiPixelQuality_forDigitizer_phase1_Run3Endof3years'),
+         connect = cms.string("frontier://FrontierProd/CMS_CONDITIONS"),
+         ),    
+     )
+
 # Output definition
 outrootfile='file:step1_ZMM_13TeV_TuneCUETP8M1_'+str(process.GlobalTag.globaltag.value())+"_"+str(options.maxEvents)+'_evts_seed_'+str(options.myseed)+'.root'
 print 'output file name:', outrootfile
@@ -138,9 +154,20 @@ process.ALCARECOStreamTkAlZMuMu = cms.OutputModule("PoolOutputModule",
 )
 
 # Other statements
+process.mix.input.nbPileupEvents.averageNumber = cms.double(50.000000)
+process.mix.bunchspace = cms.int32(25)
+process.mix.minBunch = cms.int32(-12)
+process.mix.maxBunch = cms.int32(3)
+process.mix.input.fileNames = cms.untracked.vstring(['/store/relval/CMSSW_10_6_0/RelValMinBias_13/GEN-SIM/106X_upgrade2021_realistic_v4_rsb-v1/10000/951D01A7-EA63-5140-924F-39CDAC485C80.root', '/store/relval/CMSSW_10_6_0/RelValMinBias_13/GEN-SIM/106X_upgrade2021_realistic_v4_rsb-v1/10000/C62AF47C-4632-1C48-9DCF-D21A342757AB.root', '/store/relval/CMSSW_10_6_0/RelValMinBias_13/GEN-SIM/106X_upgrade2021_realistic_v4_rsb-v1/10000/86682229-A45E-BF45-9CF7-42E90E8D80A3.root', '/store/relval/CMSSW_10_6_0/RelValMinBias_13/GEN-SIM/106X_upgrade2021_realistic_v4_rsb-v1/10000/050252BF-B45B-6749-BB24-67251BE4F0FF.root', '/store/relval/CMSSW_10_6_0/RelValMinBias_13/GEN-SIM/106X_upgrade2021_realistic_v4_rsb-v1/10000/FC4B4722-0BB2-6141-9D8C-F14B0BD6928B.root', '/store/relval/CMSSW_10_6_0/RelValMinBias_13/GEN-SIM/106X_upgrade2021_realistic_v4_rsb-v1/10000/D3BF18BE-4C61-C44C-9DA8-72ACB515D2D2.root'])
+
 process.XMLFromDBSource.label = cms.string("Extended")
 process.genstepfilter.triggerConditions=cms.vstring("generation_step")
 process.mix.digitizers = cms.PSet(process.theDigitizersValid)
+process.mix.digitizers.pixel.ThresholdInElectrons_BPix_L1 = cms.double(1300.0)
+process.mix.digitizers.pixel.ThresholdInElectrons_BPix_L2 = cms.double(1600.0)
+process.mix.digitizers.pixel.ThresholdInElectrons_BPix = cms.double(1600.0)
+process.mix.digitizers.pixel.ThresholdInElectrons_FPix = cms.double(1600)   
+process.PixelCPEGenericESProducer.IrradiationBiasCorrection = True
 process.ALCARECOEventContent.outputCommands.extend(process.OutALCARECOTkAlZMuMu_noDrop.outputCommands)
 
 process.generator = cms.EDFilter("Pythia8GeneratorFilter",
@@ -216,6 +243,8 @@ associatePatAlgosToolsTask(process)
 # filter all path with the production filter sequence
 for path in process.paths:
 	getattr(process,path)._seq = process.ProductionFilterSequence * getattr(process,path)._seq 
+
+
 
 
 # Customisation from command line

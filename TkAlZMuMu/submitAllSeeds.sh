@@ -11,6 +11,6 @@ fi
 
 for i in {1..10}; do   
     echo "------ submitting job with seed = $i"
-    condor_submit par1=${i} par2=10000 par3=102X_upgrade2018_realistic_v10 submit.sub par4=${CMSSW_DIR}
+    condor_submit par1=${i} par2=10000 par3=106X_mcRun3_2023_realistic_Candidate_2019_06_07_21_52_54 submit.sub par4=${CMSSW_DIR}
 done
 
