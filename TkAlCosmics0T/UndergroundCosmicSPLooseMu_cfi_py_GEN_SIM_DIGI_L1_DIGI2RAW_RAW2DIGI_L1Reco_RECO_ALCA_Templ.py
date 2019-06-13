@@ -6,9 +6,9 @@
 import FWCore.ParameterSet.Config as cms
 import FWCore.ParameterSet.VarParsing as VarParsing
 
-from Configuration.StandardSequences.Eras import eras
+from Configuration.Eras.Era_Run3_cff import Run3
+process = cms.Process('RECO',Run3)
 
-process = cms.Process('RECO',eras.Run2_2018)
 
 ###################################################################
 # Setup 'standard' options
@@ -28,7 +28,7 @@ options.register('maxEvents',
 		 "Number of events to process (-1 for all)")
 
 options.register ('GlobalTag',
-                  'auto:phase1_2018_cosmics',
+                  '106X_mcRun3_2023_realistic_Candidate_2019_06_07_21_52_54',
                   VarParsing.VarParsing.multiplicity.singleton, # singleton or list
                   VarParsing.VarParsing.varType.string,          # string, int, or float
 		  "Global Tag to select")
@@ -93,7 +93,24 @@ process.configurationMetadata = cms.untracked.PSet(
 )
 
 from Configuration.AlCa.GlobalTag import GlobalTag
-process.GlobalTag = GlobalTag(process.GlobalTag,options.GlobalTag,'')
+process.GlobalTag = GlobalTag(process.GlobalTag,options.GlobalTag, '')
+
+process.GlobalTag.toGet = cms.VPSet(
+     cms.PSet(record = cms.string('BeamSpotObjectsRcd'),
+          tag = cms.string('BeamSpotObjects_Realistic25ns_13TeVCollisions_RoundOpticsHighSigmaZ_RunBased_v2_mc'),
+          connect = cms.string("frontier://FrontierProd/CMS_CONDITIONS"),
+          ),    
+           cms.PSet(record = cms.string('SiPixelDynamicInefficiencyRcd'),
+          tag = cms.string('SiPixelDynamicInefficiency_PhaseI_Run3Studies_v2'),
+         connect = cms.string("frontier://FrontierProd/CMS_CONDITIONS"),
+          ),    
+    cms.PSet(record = cms.string('SiPixelQualityFromDbRcd'),
+         label = cms.untracked.string('forDigitizer'),
+          tag = cms.string('SiPixelQuality_forDigitizer_phase1_Run3Endof3years'),
+         connect = cms.string("frontier://FrontierProd/CMS_CONDITIONS"),
+         ),    
+     )
+
 
 # Output definition
 outrootfile='file:step1_UndergroundCosmicSPLooseMu_'+str(process.GlobalTag.globaltag.value())+"_"+str(options.maxEvents)+'_evts_seed_'+str(options.myseed)+'.root'
