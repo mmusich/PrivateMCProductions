@@ -18,9 +18,9 @@ def customise_alcareco(process):
 	process.pathALCARECOTkAlMuonIsolated.remove(process.ALCARECOTkAlMuonIsolatedHLT)
 	return process
 
-from Configuration.StandardSequences.Eras import eras
 
-process = cms.Process('RECO',eras.Run2_2018)
+from Configuration.Eras.Era_Run3_cff import Run3
+process = cms.Process('RECO',Run3)
 
 ###################################################################
 # Setup 'standard' options
@@ -40,7 +40,7 @@ options.register('maxEvents',
 		 "Number of events to process (-1 for all)")
 
 options.register ('GlobalTag',
-                  'auto:phase1_2018_realistic',
+                  '106X_mcRun3_2023_realistic_Candidate_2019_06_07_21_52_54',
                   VarParsing.VarParsing.multiplicity.singleton, # singleton or list
                   VarParsing.VarParsing.varType.string,          # string, int, or float
 		  "Global Tag to select")
@@ -59,7 +59,7 @@ process.load('Configuration.StandardSequences.GeometryRecoDB_cff')
 process.load('Configuration.StandardSequences.GeometrySimDB_cff')
 process.load('Configuration.StandardSequences.MagneticField_cff')
 process.load('Configuration.StandardSequences.Generator_cff')
-process.load('IOMC.EventVertexGenerators.VtxSmearedRealistic25ns13TeVEarly2018Collision_cfi')
+process.load('IOMC.EventVertexGenerators.VtxSmearedRun3RoundOptics25ns13TeVHighSigmaZ_cfi')
 process.load('GeneratorInterface.Core.genFilterSummary_cff')
 process.load('Configuration.StandardSequences.SimIdeal_cff')
 process.load('Configuration.StandardSequences.Digi_cff')
@@ -141,7 +141,24 @@ process.genstepfilter.triggerConditions=cms.vstring("generation_step")
 process.mix.digitizers = cms.PSet(process.theDigitizersValid)
 process.ALCARECOEventContent.outputCommands.extend(process.OutALCARECOTkAlMuonIsolated_noDrop.outputCommands)
 from Configuration.AlCa.GlobalTag import GlobalTag
-process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:phase1_2018_realistic', '')
+process.GlobalTag = GlobalTag(process.GlobalTag,options.GlobalTag, '')
+
+process.GlobalTag.toGet = cms.VPSet(
+     cms.PSet(record = cms.string('BeamSpotObjectsRcd'),
+          tag = cms.string('BeamSpotObjects_Realistic25ns_13TeVCollisions_RoundOpticsHighSigmaZ_RunBased_v2_mc'),
+          connect = cms.string("frontier://FrontierProd/CMS_CONDITIONS"),
+          ),    
+           cms.PSet(record = cms.string('SiPixelDynamicInefficiencyRcd'),
+          tag = cms.string('SiPixelDynamicInefficiency_PhaseI_Run3Studies_v2'),
+         connect = cms.string("frontier://FrontierProd/CMS_CONDITIONS"),
+          ),    
+    cms.PSet(record = cms.string('SiPixelQualityFromDbRcd'),
+         label = cms.untracked.string('forDigitizer'),
+          tag = cms.string('SiPixelQuality_forDigitizer_phase1_Run3Endof3years'),
+         connect = cms.string("frontier://FrontierProd/CMS_CONDITIONS"),
+         ),    
+     )
+
 
 process.generator = cms.EDFilter("Pythia8GeneratorFilter",
     PythiaParameters = cms.PSet(
