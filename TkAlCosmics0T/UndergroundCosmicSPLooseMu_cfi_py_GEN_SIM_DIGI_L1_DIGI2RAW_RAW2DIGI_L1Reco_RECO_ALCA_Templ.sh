@@ -21,9 +21,9 @@ cmsRun UndergroundCosmicSPLooseMu_cfi_py_GEN_SIM_DIGI_L1_DIGI2RAW_RAW2DIGI_L1Rec
 
 echo "Content of working directory is: " `ls -lrt`
 
-eos mkdir -p /eos/cms/store/group/alca_trackeralign/$USER/test_out/Cosmics2018MCProd/
+eos mkdir -p /eos/cms/store/group/alca_trackeralign/$USER/test_out/CosmicsRun3MCProd/
 
-for payloadOutput in $(ls *root ); do xrdcp -f $payloadOutput root://eoscms.cern.ch//eos/cms/store/group/alca_trackeralign/$USER/test_out/Cosmics2018MCProd/step1_UndergroundCosmicSPLooseMu_${globalTag}_${nEvts}_evts_seed_${mySeed}.root ; done
+for payloadOutput in $(ls *root ); do xrdcp -f $payloadOutput root://eoscms.cern.ch//eos/cms/store/group/alca_trackeralign/$USER/test_out/CosmicsRun3MCProd/step1_UndergroundCosmicSPLooseMu_${globalTag}_${nEvts}_evts_seed_${mySeed}.root ; done
 
 mv ${JobName}.out ${CMSSW_DIR}/outfiles
 mv ${JobName}.err ${CMSSW_DIR}/outfiles
